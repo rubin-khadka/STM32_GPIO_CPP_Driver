@@ -1,0 +1,41 @@
+name: Embedded_Cpp_Code_Quality_Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  style_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: sudo apt-get install -y clang-format
+
+      - name: Check code formatting
+        run: |
+          echo "Checking C++ code style..."
+          find Src -name "*.cpp" -o -name "*.hpp" | xargs clang-format --dry-run --Werror 2>&1
+          find Inc -name "*.cpp" -o -name "*.hpp" | xargs clang-format --dry-run --Werror 2>&1
+          echo "Style check passed"
+
+  analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Install cppcheck
+        run: sudo apt-get install -y cppcheck
+      
+      - name: Run cppcheck
+        run: |
+          echo "Running static analysis..."
+          cppcheck --enable=all \
+                  --suppress=missingIncludeSystem \
+                  --inline-suppr \
+                  --error-exitcode=1 \
+                  Src/ \
+                  Inc/ \
+                  2>&1
+          echo "Static analysis passed"
