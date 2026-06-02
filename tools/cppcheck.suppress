@@ -1,7 +1,7 @@
-// CubeIDE auto-generated system files 
-unusedFunction:*/syscalls.c
-unusedFunction:*/sysmem.c
-constParameterPointer:*/syscalls.c
+// CubeIDE auto-generated system files
+unusedFunction:Src/syscalls.c
+unusedFunction:Src/sysmem.c
+constParameterPointer:Src/syscalls.c
 
 // HAL/CMSIS files — STMicroelectronics code
 *:Drivers/*
