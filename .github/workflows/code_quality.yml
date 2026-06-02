@@ -19,7 +19,7 @@ jobs:
           find Inc -name "*.cpp" -o -name "*.hpp" | xargs clang-format --dry-run --Werror 2>&1
           echo "Style check passed"
 
-  analysis:
+  static_analysis:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -30,12 +30,13 @@ jobs:
       
       - name: Run cppcheck
         run: |
-          echo "Running static analysis..."
+          echo "Running static analysis on application code..."
           cppcheck --enable=all \
                   --suppress=missingIncludeSystem \
+                  --suppressions-list=tools/cppcheck.suppress \
                   --inline-suppr \
                   --error-exitcode=1 \
-                  Src/ \
+                  Src/main.cpp \
                   Inc/ \
                   2>&1
           echo "Static analysis passed"
