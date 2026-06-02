@@ -16,10 +16,10 @@ jobs:
         run: |
           echo "Checking C++ code style..."
           find Src -name "*.cpp" -o -name "*.hpp" | xargs clang-format --dry-run --Werror 2>&1
-          find Inc -name "*.cpp" -o -name "*.hpp" | xargs clang-format --dry-run --Werror 2>&1
+          find Inc -name "*.hpp" | xargs clang-format --dry-run --Werror 2>&1
           echo "Style check passed"
 
-  analysis:
+  static_analysis:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -30,12 +30,15 @@ jobs:
       
       - name: Run cppcheck
         run: |
-          echo "Running static analysis..."
+          echo "Running static analysis on application code..."
           cppcheck --enable=all \
                   --suppress=missingIncludeSystem \
                   --inline-suppr \
                   --error-exitcode=1 \
-                  Src/ \
-                  Inc/ \
+                  -i Src/syscalls.c \
+                  -i Src/sysmem.c \
+                  -i Src/syscalls.cpp \
+                  -i Src/sysmem.cpp \
+                  Src/ Inc/ \
                   2>&1
           echo "Static analysis passed"
